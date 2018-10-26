@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -30,6 +30,7 @@ namespace WindowsFormsApp2
             tierList.Add(reptil1);
             Reptil reptil2 = new Reptil(75, 1, 1, false);
             tierList.Add(reptil2);
+            tierListe.DataSource = tierList;
 
         }
 
@@ -53,6 +54,8 @@ namespace WindowsFormsApp2
                 zeugs = fisch.flosse.ToString();
                 label12.Text = zeugs;
                 label11.Text = "Flossen";
+                label14.Hide();
+                label13.Hide();
             }
             else if (tierListe.SelectedItem is Reptil)
             {
@@ -67,6 +70,8 @@ namespace WindowsFormsApp2
                 zeugs = reptil.giftig.ToString();
                 label12.Text = zeugs;
                 label11.Text = "Giftig";
+                label14.Hide();
+                label13.Hide();
             }
             else if (tierListe.SelectedItem is Vogel)
             {
@@ -78,10 +83,14 @@ namespace WindowsFormsApp2
                 label6.Text = preis;
                 gewicht = vogel.gewicht.ToString();
                 label10.Text = gewicht;
-                zeugs = vogel.flug.ToString();
-                label12.Text = zeugs;
                 label11.Text = "Flugfähig";
-                if (vogel.flug == true)
+                zeugs = vogel.flugweite.ToString();   
+                label13.Text = "Flugreichweite";
+                label14.Text = zeugs;
+                label14.Show();
+                label13.Show();
+                label12.Show();
+                if (vogel.flug)
                 {
                     zeug = "Ja";
                 }
@@ -89,8 +98,7 @@ namespace WindowsFormsApp2
                 {
                     zeug = "Nein";
                 }
-                label13.Text = "Flugreichweite";
-                label14.Text = zeug;
+                label12.Text = zeug;
             }
 
 
@@ -165,11 +173,6 @@ namespace WindowsFormsApp2
 
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-           
-            tierListe.DataSource = tierList;
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -181,21 +184,33 @@ namespace WindowsFormsApp2
                 tierListe.DataSource = tierList;
 
             }
-            else
+            else if(tierListe.SelectedItem is Reptil)
+
             {
-                bool check = CheckboxDialog.ShowDialog("Ueber 18?","Straffrei?","Test");
-                if (check)
+                Reptil rep = tierListe.SelectedItem as Reptil;
+                if (rep.giftig)
+                {
+                    bool check = CheckboxDialog.ShowDialog("Ueber 18?", "Straffrei?", "Test");
+                    if (check)
+                    {
+                        int index = tierListe.SelectedIndex;
+                        tierList.RemoveAt(index);
+                        tierListe.DataSource = null;
+                        tierListe.DataSource = tierList;
+
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("Kauf nicht möglich!");
+                    }
+                }
+                else
                 {
                     int index = tierListe.SelectedIndex;
                     tierList.RemoveAt(index);
                     tierListe.DataSource = null;
                     tierListe.DataSource = tierList;
-
-
-                }
-                else
-                {
-                    MessageBox.Show("Kauf nicht möglich!");
                 }
 
             }
